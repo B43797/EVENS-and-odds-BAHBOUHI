@@ -1,46 +1,51 @@
 function isPrime(n) {
-  if (n < 2) return false;
-  if (n === 2) return true;
-  if (n % 2 === 0) return false;
-  for (let i = 3; i * i <= n; i += 2) {
-    if (n % i === 0) return false;
-  }
-  return true;
-}
-
-function calculate() {
-  const start = performance.now();
-  const input = document.getElementById("number").value.trim();
-  const E = BigInt(input);
-
-  if (E % 2n !== 0n || E < 4n) {
-    document.getElementById("result").innerText = "Please enter an even number ≥ 4.";
-    return;
-  }
-
-  const max = E / 2n;
-  let found = false;
-  for (let p = 2n; p <= max; p++) {
-    const q = E - p;
-    if (isPrime(Number(p)) && isPrime(Number(q))) {
-      const O = E / 2n;
-      let factor = "";
-      if (O % p === 0n) factor = `\n→ ${p} is a factor of ${O}`;
-      else if (O % q === 0n) factor = `\n→ ${q} is a factor of ${O}`;
-      const time = (performance.now() - start).toFixed(2);
-      document.getElementById("result").innerText =
-        `Goldbach pair: ${p} + ${q} = ${E}\nOdd number O = ${O}${factor}\nTime: ${time} ms`;
-      found = true;
-      break;
+    if (n < 2) return false;
+    if (n === 2) return true;
+    if (n % 2 === 0) return false;
+    const sqrtN = Math.floor(Math.sqrt(n));
+    for (let i = 3; i <= sqrtN; i += 2) {
+        if (n % i === 0) return false;
     }
-  }
-
-  if (!found) {
-    document.getElementById("result").innerText = "No Goldbach pair found.";
-  }
+    return true;
 }
 
-function copyResult() {
-  const text = document.getElementById("result").innerText;
-  navigator.clipboard.writeText(text);
+function findGoldbachPair(E) {
+    if (E < 4 || E % 2 !== 0) {
+        return "Please enter an even number ≥ 4.";
+    }
+
+    const t0 = performance.now();
+
+    if (isPrime(E - 2)) {
+        const t1 = performance.now();
+        return `Goldbach pair: 2 + ${E - 2} = ${E} (Time: ${(t1 - t0).toFixed(3)} ms)`;
+    }
+
+    for (let p = 3; p <= E / 2; p += 2) {
+        let q = E - p;
+        if (isPrime(p) && isPrime(q)) {
+            const t1 = performance.now();
+            return `Goldbach pair: ${p} + ${q} = ${E} (Time: ${(t1 - t0).toFixed(3)} ms)`;
+        }
+    }
+
+    return "No Goldbach pair found (this should not happen if Goldbach's Conjecture holds).";
+}
+
+function compute() {
+    const input = document.getElementById("numberInput").value.trim();
+    const E = BigInt(input);
+
+    if (E < 4n || E % 2n !== 0n) {
+        document.getElementById("result").innerText = "Please enter an even number ≥ 4.";
+        return;
+    }
+
+    // For very large numbers, we use Number only if safe
+    if (E <= Number.MAX_SAFE_INTEGER) {
+        const result = findGoldbachPair(Number(E));
+        document.getElementById("result").innerText = result;
+    } else {
+        document.getElementById("result").innerText = "Number too large (limit: 10^18)";
+    }
 }
