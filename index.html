@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Goldbach & Factorization</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Goldbach Decomposition</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Goldbach + Factorization</h1>
-    <input type="text" id="number" placeholder="Enter an even number E">
-    <button onclick="calculate()">Decompose & Factor</button>
-    <button onclick="copyResult()">Copy Result</button>
+    <h1>Goldbach's Decomposition</h1>
+    <p>Enter an even number ≥ 4 to find primes (p, q) such that p + q = N.</p>
+    <input type="text" id="evenInput" placeholder="Enter an even number ≥ 4" />
+    <button onclick="findGoldbach()">Decompose</button>
     <div id="result"></div>
+    <p id="time"></p>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
